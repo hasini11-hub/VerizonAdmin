@@ -1,0 +1,6 @@
+streamlit
+uuid
+pymysql
+pandas
+smtplib
+email
