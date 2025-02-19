@@ -147,9 +147,16 @@ elif page == "View Client Data":
     client_data = fetch_client_data_from_db(connection)
 
     if client_data:
+        # Create DataFrame
         df = pd.DataFrame(client_data, columns=["Email", "Site Number", "Compensation Price", "Timestamp"])
         
-        df = df.reset_index(drop=True)  # Reset index and remove old index
+        # Format Compensation Price as Currency ($1,234.56)
+        df["Compensation Price"] = df["Compensation Price"].apply(lambda x: f"${x:,.2f}")
+
+        # Reset index to remove serial number column
+        df = df.reset_index(drop=True)
+
+        # Display table with full width
         st.dataframe(df, use_container_width=True)
     else:
         st.warning("No data found in the `clientInputs` table.")
