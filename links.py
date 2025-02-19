@@ -102,6 +102,9 @@ def fetch_client_data_from_db(connection):
         st.error(f"Error fetching data from database: {str(e)}")
         return []
 
+# Set Streamlit page configuration to wide mode
+st.set_page_config(layout="wide")
+
 # Streamlit UI - Page navigation
 page = st.sidebar.radio("Select Page", ("Assign Email and Link", "View Client Data"))
 
@@ -109,27 +112,21 @@ page = st.sidebar.radio("Select Page", ("Assign Email and Link", "View Client Da
 connection = create_db_connection()
 
 if page == "Assign Email and Link":
-    # Page 1: Assign Email and Link
     st.title("Assign Email, Generate Link, and Save Link Data")
 
-    # Input: Email address
     email = st.text_input("Enter Email Address")
 
     if st.button("Generate Link, Save to DB, and Send Email"):
         if email:
-            # Generate a unique user ID and link
             user_id = str(uuid.uuid4())[:8]  # Generate a random short user ID
             link = generate_link(user_id)
 
-            # Save the generated link to the database (in the `links` table)
             save_link_to_db(email, link, connection)
 
-            # Create email content
             subject = "Your Unique Access Link"
             body = f"Hello, here is your unique link: {link}"
 
-            # Send email
-            #send_email(email, subject, body)
+            # send_email(email, subject, body)
 
         else:
             st.warning("Please enter an email address.")
@@ -139,24 +136,18 @@ if page == "Assign Email and Link":
     links_data = fetch_links_from_db(connection)
 
     if links_data:
-        # Display the links data as a table
         links_df = pd.DataFrame(links_data, columns=["Email", "Link"])
-        st.dataframe(links_df)
+        st.dataframe(links_df, use_container_width=True)  # Make the table use full width
     else:
         st.warning("No links found in the `links` table.")
 
 elif page == "View Client Data":
-    # Page 2: View Client Data
     st.title("View Client Data")
-    # Fetch data from `clientInputs` table
+
     client_data = fetch_client_data_from_db(connection)
 
     if client_data:
-        # Display the data as a table
         df = pd.DataFrame(client_data, columns=["Email", "Site Number", "Compensation Price", "Timestamp"])
-        st.dataframe(df)
+        st.dataframe(df, use_container_width=True)  # Expands the table width
     else:
         st.warning("No data found in the `clientInputs` table.")
-
-# Close the connection when the app ends
-connection.close()
