@@ -89,12 +89,17 @@ def fetch_client_data_from_db(connection):
             cursor.execute(fetch_query)
             result = cursor.fetchall()
 
-        # Convert timestamps to CT
+        # Convert timestamps to CT and remove the timezone offset
+        utc_tz = pytz.utc
+        ct_tz = pytz.timezone("America/Chicago")
+
         converted_result = []
         for row in result:
             email, siteNumber, compPrice, timestamp = row
             if timestamp:  # Ensure timestamp is not None
                 timestamp = timestamp.replace(tzinfo=utc_tz).astimezone(ct_tz)
+                # Format the timestamp to remove the timezone part
+                timestamp = timestamp.strftime("%Y-%m-%d %I:%M %p")  # No timezone offset
             converted_result.append((email, siteNumber, compPrice, timestamp))
 
         return converted_result
