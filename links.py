@@ -149,7 +149,7 @@ elif page == "View Client Data":
     if client_data:
         df = pd.DataFrame(client_data, columns=["Email", "Site Number", "Compensation Price", "Timestamp"])
         
-        # Remove index by setting it explicitly
-        st.dataframe(df.style.hide(axis="index"), use_container_width=True)
+        df = df.reset_index(drop=True)  # Reset index and remove old index
+        st.dataframe(df, use_container_width=True)
     else:
         st.warning("No data found in the `clientInputs` table.")
