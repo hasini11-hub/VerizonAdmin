@@ -81,7 +81,7 @@ def fetch_client_data_from_db(connection):
     try:
         with connection.cursor() as cursor:
             # Fetch all data from the "clientInputs" table
-            fetch_query = "SELECT email, siteNumber, compPrice FROM clientInputs"
+            fetch_query = "SELECT email, siteNumber, compPrice, timestamp FROM clientInputs"
             cursor.execute(fetch_query)
             result = cursor.fetchall()
         return result
@@ -141,7 +141,7 @@ elif page == "View Client Data":
 
     if client_data:
         # Display the data as a table
-        df = pd.DataFrame(client_data, columns=["Email", "Site Number", "Compensation Price"])
+        df = pd.DataFrame(client_data, columns=["Email", "Site Number", "Compensation Price", "Timestamp"])
         st.dataframe(df)
     else:
         st.warning("No data found in the `clientInputs` table.")
