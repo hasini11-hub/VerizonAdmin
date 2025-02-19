@@ -5,6 +5,11 @@ import pandas as pd
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
+import pytz
+
+# Define timezones
+utc_tz = pytz.utc
+ct_tz = pytz.timezone("America/Chicago")
 
 # AWS RDS Connection Details
 db_host = 'gcbdallas.caqfykoqtrvk.us-east-1.rds.amazonaws.com'
@@ -76,7 +81,6 @@ def fetch_links_from_db(connection):
         st.error(f"Error fetching data from database: {str(e)}")
         return []
 
-# Function to fetch data from `clientInputs` table
 def fetch_client_data_from_db(connection):
     try:
         with connection.cursor() as cursor:
@@ -84,7 +88,16 @@ def fetch_client_data_from_db(connection):
             fetch_query = "SELECT email, siteNumber, compPrice, timestamp FROM clientInputs"
             cursor.execute(fetch_query)
             result = cursor.fetchall()
-        return result
+
+        # Convert timestamps to CT
+        converted_result = []
+        for row in result:
+            email, siteNumber, compPrice, timestamp = row
+            if timestamp:  # Ensure timestamp is not None
+                timestamp = timestamp.replace(tzinfo=utc_tz).astimezone(ct_tz)
+            converted_result.append((email, siteNumber, compPrice, timestamp))
+
+        return converted_result
     except Exception as e:
         st.error(f"Error fetching data from database: {str(e)}")
         return []
@@ -135,7 +148,6 @@ if page == "Assign Email and Link":
 elif page == "View Client Data":
     # Page 2: View Client Data
     st.title("View Client Data")
-
     # Fetch data from `clientInputs` table
     client_data = fetch_client_data_from_db(connection)
 
