@@ -121,7 +121,7 @@ if page == "Assign Email and Link":
 
     email = st.text_input("Enter Email Address")
 
-    if st.button("Generate Link, Save to DB, and Send Email"):
+    if st.button("Generate Link, Save to DB"):
         if email:
             user_id = str(uuid.uuid4())[:8]  # Generate a random short user ID
             link = generate_link(user_id)
