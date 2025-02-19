@@ -23,7 +23,7 @@ def create_db_connection():
 
 # Function to generate unique links
 def generate_link(user_id):
-    base_url = "https://verizonclientmarketing-hgger9j3sdy8zv6fkpclcl.streamlit.app/"  # Replace with your app's URL
+    base_url = "https://gcb-verizon-savings.streamlit.app/"  # Replace with your app's URL
     return f"{base_url}?session_id={user_id}"
 
 # Function to send email
