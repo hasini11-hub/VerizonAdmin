@@ -85,7 +85,7 @@ def fetch_client_data_from_db(connection):
     try:
         with connection.cursor() as cursor:
             # Fetch all data from the "clientInputs" table
-            fetch_query = "SELECT email, siteNumber, compPrice, timestamp FROM clientInputs WHERE email != 'No user ID found'"
+            fetch_query = "SELECT email, siteNumber, compPrice, timestamp FROM clientInputs WHERE email != 'No user ID found' and AND NOT (siteNumber = 1000 AND compPrice = 10000)"
             cursor.execute(fetch_query)
             result = cursor.fetchall()
 
