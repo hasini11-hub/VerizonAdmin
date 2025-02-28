@@ -73,7 +73,7 @@ def fetch_links_from_db(connection):
     try:
         with connection.cursor() as cursor:
             # Fetch all data from the "links" table
-            fetch_query = "SELECT email, link FROM savings_links"
+            fetch_query = "SELECT email, link FROM savings_links "
             cursor.execute(fetch_query)
             result = cursor.fetchall()
         return result
@@ -85,7 +85,7 @@ def fetch_client_data_from_db(connection):
     try:
         with connection.cursor() as cursor:
             # Fetch all data from the "clientInputs" table
-            fetch_query = "SELECT email, site_number, comp_price, created_at FROM savings_clientinput"
+            fetch_query = "SELECT email, site_number, comp_price, created_at FROM savings_clientinput where email !='cantgetemail'"
 
             cursor.execute(fetch_query)
             result = cursor.fetchall()
