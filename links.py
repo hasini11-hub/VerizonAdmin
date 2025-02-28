@@ -15,7 +15,7 @@ ct_tz = pytz.timezone("America/Chicago")
 db_host = 'gcbdallas.caqfykoqtrvk.us-east-1.rds.amazonaws.com'
 db_user = 'Dallas_2024'
 db_password = 'GCBDallas$223'
-db_name = 'VerizonClientMarketing'
+db_name = 'GCB_Verizon_Savings'
 
 # Function to create a single database connection
 def create_db_connection():
@@ -28,7 +28,7 @@ def create_db_connection():
 
 # Function to generate unique links
 def generate_link(user_id):
-    base_url = "https://gcb-verizon-savings.streamlit.app/"  # Replace with your app's URL
+    base_url = "http://44.231.70.165/gcb_verizon_savings/"  # Replace with your app's URL
     return f"{base_url}?session_id={user_id}"
 
 # Function to send email
@@ -61,7 +61,7 @@ def save_link_to_db(email, link, connection):
     try:
         with connection.cursor() as cursor:
             # Insert data into the "links" table
-            insert_query = "INSERT INTO links (email, link) VALUES (%s, %s)"
+            insert_query = "INSERT INTO savings_links (email, link) VALUES (%s, %s)"
             cursor.execute(insert_query, (email, link))
             connection.commit()
         st.success(f"Link saved to database for {email}")
@@ -73,7 +73,7 @@ def fetch_links_from_db(connection):
     try:
         with connection.cursor() as cursor:
             # Fetch all data from the "links" table
-            fetch_query = "SELECT email, link FROM links"
+            fetch_query = "SELECT email, link FROM savings_links"
             cursor.execute(fetch_query)
             result = cursor.fetchall()
         return result
@@ -85,7 +85,7 @@ def fetch_client_data_from_db(connection):
     try:
         with connection.cursor() as cursor:
             # Fetch all data from the "clientInputs" table
-            fetch_query = "SELECT email, siteNumber, compPrice, timestamp FROM clientInputs WHERE NOT (email = 'No user ID found' AND siteNumber = 1000 AND compPrice = 10000)"
+            fetch_query = "SELECT email, site_number, comp_price, created_at FROM savings_clientinput"
 
             cursor.execute(fetch_query)
             result = cursor.fetchall()
